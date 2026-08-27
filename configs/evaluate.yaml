@@ -1,0 +1,64 @@
+schema_version: 2
+task: Car-LocalNavigation-Eval-v0
+curriculum: configs/curriculum.yaml
+campaign: null
+checkpoints: latest
+tail_checkpoints: 5
+calibration: null
+num_envs: 16
+device: cuda:0
+headless: true
+output_root: evaluations
+checkpoint_timeout_sec: 900
+suite: all
+
+suites:
+  core:
+    episodes: 1000
+    seed_range: [20000, 20999]
+    profile:
+      path_length_m: [1.0, 4.0]
+      static_obstacles: [6, 18]
+      dynamic_obstacles: [0, 0]
+      goal_yaw_offset_deg: 180
+      randomization_scale: 1.0
+    gates:
+      success_rate_min: 0.95
+      collision_rate_max: 0.01
+      stall_rate_max: 0.02
+      p95_cross_track_error_m_max: 0.10
+      mean_goal_position_error_m_max: 0.08
+      mean_goal_yaw_error_rad_max: 0.14
+    validation:
+      episodes: 200
+      seed_range: [10000, 10199]
+      success_rate_min: 0.90
+      collision_rate_max: 0.03
+  dynamic:
+    episodes: 500
+    seed_range: [22000, 22499]
+    profile:
+      path_length_m: [1.0, 3.5]
+      static_obstacles: [4, 12]
+      dynamic_obstacles: [2, 2]
+      goal_yaw_offset_deg: 120
+      randomization_scale: 1.0
+    gates:
+      success_rate_min: 0.85
+      collision_rate_max: 0.03
+      stall_rate_max: 0.05
+    validation:
+      episodes: 200
+      seed_range: [12000, 12199]
+      success_rate_min: 0.75
+      collision_rate_max: 0.08
+  stress:
+    episodes: 200
+    seed_range: [24000, 24199]
+    profile:
+      path_length_m: [1.0, 4.0]
+      static_obstacles: [6, 18]
+      dynamic_obstacles: [4, 4]
+      goal_yaw_offset_deg: 180
+      randomization_scale: 1.0
+    gates: {}

@@ -1,0 +1,10 @@
+schema_version: 1
+task: Car-LocalNavigation-Play-v0
+checkpoint: evaluations/latest_evaluation.json
+curriculum: configs/curriculum.yaml
+# null 时自动使用 checkpoint 内嵌的标定；显式值必须与其一致。
+calibration: null
+num_envs: 16
+steps: 2000
+device: cuda:0
+headless: false

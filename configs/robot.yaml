@@ -1,0 +1,34 @@
+schema_version: 1
+# 差速底盘几何参数，必须与 URDF、ROS 2 控制器和动作映射保持一致。
+geometry:
+  wheel_radius_m: 0.032
+  wheel_separation_m: 0.175
+  footprint_m:
+    - [0.10, 0.108]
+    - [0.10, -0.108]
+    - [-0.10, -0.108]
+    - [-0.10, 0.108]
+  footprint_padding_m: 0.01
+# 控制器频率、速度边界及底盘加减速限制。
+controller:
+  frequency_hz: 15.0
+  max_linear_speed_mps: 0.10
+  max_angular_speed_radps: 1.047197551
+  min_nonzero_angular_speed_radps: 0.523598776
+  max_linear_accel_mps2: 0.6
+  max_linear_decel_mps2: 0.8
+  max_angular_accel_radps2: 1.5
+  max_angular_decel_radps2: 2.0
+# 生产观测契约固定使用 72 束、0.05–6.0 米水平雷达。
+lidar:
+  ray_count: 72
+  min_range_m: 0.05
+  max_range_m: 6.0
+  update_rate_hz: 5.0
+# 目标判定、局部膨胀和停滞检测参数。
+navigation:
+  xy_goal_tolerance_m: 0.08
+  yaw_goal_tolerance_rad: 0.174532925
+  local_inflation_radius_m: 0.40
+  progress_radius_m: 0.04
+  progress_timeout_sec: 5.0

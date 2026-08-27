@@ -1,0 +1,19 @@
+[package]
+version = "0.1.0"
+category = "isaaclab"
+readme = "../../../README.md"
+title = "car_rl_train"
+author = "car_rl project"
+maintainer = "car_rl project"
+description = "面向移动机器人控制器的局部导航强化学习训练环境"
+repository = "https://github.com/xiaohao1208/car_rl_train"
+keywords = ["isaaclab", "navigation", "ppo"]
+
+[dependencies]
+"isaaclab" = {}
+"isaaclab_assets" = {}
+"isaaclab_rl" = {}
+"isaaclab_tasks" = {}
+
+[[python.module]]
+name = "car_rl_train"

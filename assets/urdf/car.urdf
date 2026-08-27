@@ -1,0 +1,234 @@
+<?xml version="1.0" ?>
+<robot name="car">
+  <!-- base_footprint放在地面投影处，Nav2代价地图通常使用该坐标系 -->
+  <link name="base_footprint"/>
+  <link name="base_link">
+    <!-- visual只影响RViz显示，collision用于仿真/规划工具读取车体外形 -->
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.12" radius="0.1"/>
+      </geometry>
+      <material name="car_body_black">
+        <color rgba="0.2 0.2 0.2 0.85"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.12" radius="0.1"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.0037000000000000006" ixy="0.0" ixz="0.0" iyy="0.0037000000000000006" iyz="0.0" izz="0.005000000000000001"/>
+    </inertial>
+  </link>
+  <joint name="base_footprint_to_base_link" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <!-- 高度设置让轮子紧贴地面 -->
+    <origin rpy="0 0 0" xyz="0 0 0.091"/>
+  </joint>
+  <link name="imu_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="imu_black">
+        <color rgba="0.02 0.02 0.02 0.5"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="6.666666666666667e-05" ixy="0.0" ixz="0.0" iyy="6.666666666666667e-05" iyz="0.0" izz="6.666666666666667e-05"/>
+    </inertial>
+  </link>
+  <joint name="imu_joint" type="fixed">
+    <!-- IMU固定安装在车体上 -->
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.02"/>
+  </joint>
+  <!-- 雷达支架节点 -->
+  <link name="laser_stand_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.01"/>
+      </geometry>
+      <material name="laser_stand_black">
+        <color rgba="0.02 0.02 0.02 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.1" radius="0.01"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.0008583333333333335" ixy="0.0" ixz="0.0" iyy="0.0008583333333333335" iyz="0.0" izz="5e-05"/>
+    </inertial>
+  </link>
+  <joint name="laser_stand_joint" type="fixed">
+    <!-- 支架固定到base_link，xyz表示支架底部相对车体的位置 -->
+    <parent link="base_link"/>
+    <child link="laser_stand_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.1"/>
+  </joint>
+  <!-- 雷达节点 -->
+  <link name="laser_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.02"/>
+      </geometry>
+      <material name="laser_black">
+        <color rgba="0.01 0.01 0.01 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.0001333333333333333" ixy="0.0" ixz="0.0" iyy="0.0001333333333333333" iyz="0.0" izz="0.0002"/>
+    </inertial>
+  </link>
+  <joint name="laser_joint" type="fixed">
+    <!-- laser_link位于支架顶部，z=0.0525让扫描平面高于车体 -->
+    <parent link="laser_stand_link"/>
+    <child link="laser_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.05"/>
+  </joint>
+  <link name="ultrasonic_link"/>
+  <joint name="base_link_to_ultrasonic_link" type="fixed">
+    <parent link="base_link"/>
+    <child link="ultrasonic_link"/>
+    <origin rpy="0 0 0" xyz="0.1 0 0"/>
+  </joint>
+  <link name="left_wheel_link">
+    <visual>
+      <!-- ROS圆柱默认沿Z轴，这里绕X旋转90度，让轮轴沿底盘Y轴 -->
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.032"/>
+      </geometry>
+      <material name="left_wheel_black">
+        <color rgba="0.02 0.02 0.02 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.032"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.00038933333333333333" ixy="0.0" ixz="0.0" iyy="0.00038933333333333333" iyz="0.0" izz="0.000512"/>
+    </inertial>
+  </link>
+  <joint name="left_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
+    <origin rpy="0 0 0" xyz="0 0.0875 -0.06"/>
+    <axis xyz="0.0 1.0 0.0"/>
+  </joint>
+  <link name="right_wheel_link">
+    <visual>
+      <!-- ROS圆柱默认沿Z轴，这里绕X旋转90度，让轮轴沿底盘Y轴 -->
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.032"/>
+      </geometry>
+      <material name="right_wheel_black">
+        <color rgba="0.02 0.02 0.02 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="1.57079632679 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.032"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.00038933333333333333" ixy="0.0" ixz="0.0" iyy="0.00038933333333333333" iyz="0.0" izz="0.000512"/>
+    </inertial>
+  </link>
+  <joint name="right_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
+    <origin rpy="0 0 0" xyz="0 -0.0875 -0.06"/>
+    <axis xyz="0.0 1.0 0.0"/>
+  </joint>
+  <link name="front_caster_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.016"/>
+      </geometry>
+      <material name="front_caster_black">
+        <color rgba="0.02 0.02 0.02 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.00010240000000000001" ixy="0.0" ixz="0.0" iyy="0.00010240000000000001" iyz="0.0" izz="0.00010240000000000001"/>
+    </inertial>
+  </link>
+  <joint name="front_caster_joint" type="fixed">
+    <!-- 万向轮没有独立状态，固定到base_link上 -->
+    <parent link="base_link"/>
+    <child link="front_caster_link"/>
+    <origin rpy="0 0 0" xyz="0.08 0 -0.076"/>
+    <axis xyz="0.0 0.0 0.0"/>
+  </joint>
+  <link name="back_caster_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.016"/>
+      </geometry>
+      <material name="back_caster_black">
+        <color rgba="0.02 0.02 0.02 1.0"/>
+      </material>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.00010240000000000001" ixy="0.0" ixz="0.0" iyy="0.00010240000000000001" iyz="0.0" izz="0.00010240000000000001"/>
+    </inertial>
+  </link>
+  <joint name="back_caster_joint" type="fixed">
+    <!-- 万向轮没有独立状态，固定到base_link上 -->
+    <parent link="base_link"/>
+    <child link="back_caster_link"/>
+    <origin rpy="0 0 0" xyz="-0.08 0 -0.076"/>
+    <axis xyz="0.0 0.0 0.0"/>
+  </joint>
+</robot>

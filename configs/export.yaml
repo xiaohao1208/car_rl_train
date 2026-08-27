@@ -1,0 +1,13 @@
+schema_version: 1
+# latest、明确的 model_*.pt，或 --suite all 产生的 suite_summary.json。
+checkpoint: evaluations/latest_evaluation.json
+seed: null
+test_observations: observations/real_observations.npz
+observation_manifest: observations/real_observations.manifest.json
+evaluation: null
+# null 时使用 checkpoint 内嵌标定；生产打包还需用同指标的 YAML 补录质量和摩擦。
+calibration: null
+# 可选：CLI > 此项 > ISAACLAB_ROOT > 已安装模块自动探测。
+isaaclab_root: null
+output_root: exports
+version: null

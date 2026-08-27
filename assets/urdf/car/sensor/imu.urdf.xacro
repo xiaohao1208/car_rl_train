@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find car_description)/urdf/car/inertia.urdf.xacro"/>
+
+  <!-- imu_xacro定义imu_link，ESP32发布/imu/data时frame_id使用该名称 -->
+  <xacro:macro name="imu_xacro" params="xyz imu_mass">
+    <link name="imu_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.02 0.02 0.02"/>
+        </geometry>
+        <material name="imu_black">
+          <color rgba="0.02 0.02 0.02 0.5"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <box size="0.02 0.02 0.02"/>
+        </geometry>
+      </collision>
+      <xacro:box_inertia m="${imu_mass}" l="0.02" w="0.02" h="0.02"/>
+    </link>
+
+    <joint name="imu_joint" type="fixed">
+      <!-- IMU固定安装在车体上 -->
+      <parent link="base_link"/>
+      <child link="imu_link"/>
+      <origin xyz="${xyz}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+</robot>

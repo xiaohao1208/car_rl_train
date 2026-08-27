@@ -1,0 +1,17 @@
+schema_version: 1
+source_xacro: assets/urdf/car.urdf.xacro
+expanded_urdf: assets/urdf/car.urdf
+output_usd: assets/usd/car.usd
+package_name: car_description
+required_prims:
+  - left_wheel_joint
+  - right_wheel_joint
+  - laser_link
+converter:
+  fix_base: false
+  merge_fixed_joints: false
+  force_usd_conversion: true
+  self_collision: false
+  drive_type: force
+  stiffness: 20.0
+  damping: 0.0

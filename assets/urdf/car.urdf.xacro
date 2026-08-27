@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="car">
+  <!-- 主xacro只负责装配子模块，具体link/joint形状放在base/sensor/actuator文件中 -->
+  <xacro:include filename="$(find car_description)/urdf/car/base.urdf.xacro"/>
+  <xacro:include filename="$(find car_description)/urdf/car/sensor/imu.urdf.xacro"/>
+  <xacro:include filename="$(find car_description)/urdf/car/sensor/laser.urdf.xacro"/>
+  <xacro:include filename="$(find car_description)/urdf/car/sensor/ultrasonic.urdf.xacro"/>
+  <xacro:include filename="$(find car_description)/urdf/car/actuator/wheel.urdf.xacro"/>
+  <xacro:include filename="$(find car_description)/urdf/car/actuator/caster.urdf.xacro"/>
+
+  <!-- 纯TF广播不需要准确的质量值，如果物理仿真需要 -->
+  <xacro:property name="caster_mass" value="1.0" />
+  <xacro:property name="wheel_mass" value="1.0" />
+  <xacro:property name="imu_mass" value="1.0" />
+  <xacro:property name="laser_stand_mass" value="1.0" />
+  <xacro:property name="laser_mass" value="1.0" />
+  <xacro:property name="base_mass" value="1.0" />
+
+  <!--
+    坐标系约定：
+      odom->base_footprint由car_base根据编码器连续动态发布
+      base_footprint->base_link以及传感器/轮子/万向轮静态关系由URDF发布
+      map->odom在定位时由AMCL发布，在建图时由slam_toolbox发布
+      RViz2中Fixed Frame可先选odom，有map->odom定位后再选map
+  -->
+  <!-- base_link是实体车身中心，base_footprint是地面投影-->
+  <xacro:base_xacro length="0.12" radius="0.1" base_mass="${base_mass}"/>
+
+  <!-- 传感器位置用于TF和RViz2显示，不参与底层ESP32采样 -->
+  <xacro:imu_xacro xyz="0 0 0.02" imu_mass="${imu_mass}"/>
+  <xacro:laser_xacro
+    xyz="0 0 0.1"
+    laser_stand_mass="${laser_stand_mass}"
+    laser_mass="${laser_stand_mass}"/>
+  <xacro:ultrasonic_xacro xyz="0.1 0 0"/>
+
+  <xacro:wheel_xacro
+    wheel_name="left"
+    xyz="0 0.0875 -0.06"
+    wheel_mass="${wheel_mass}"/>
+  <xacro:wheel_xacro
+    wheel_name="right"
+    xyz="0 -0.0875 -0.06"
+    wheel_mass="${wheel_mass}"/>
+
+  <!-- 前后万向轮只作为几何/碰撞显示 -->
+  <xacro:caster_xacro
+    caster_name="front"
+    xyz="0.08 0 -0.076"
+    caster_mass="${caster_mass}"/>
+  <xacro:caster_xacro
+    caster_name="back"
+    xyz="-0.08 0 -0.076"
+    caster_mass="${caster_mass}"/>
+</robot>

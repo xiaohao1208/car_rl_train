@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!-- 惯性宏让每个实体节点都有合法的惯性，robot_state_publisher或仿真工具读取时更稳定 -->
+  <!-- lwh分别为长宽高单位米，m为质量单位千克 -->
+  <xacro:macro name="box_inertia" params="m l w h">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${(m / 12.0) * (w * w + h * h)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${(m / 12.0) * (l * l + h * h)}"
+        iyz="0.0"
+        izz="${(m / 12.0) * (l * l + w * w)}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- 轮子和雷达支架使用圆柱惯性，r为半径，h为圆柱长度 -->
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${(m / 12.0) * (3.0 * r * r + h * h)}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${(m / 12.0) * (3.0 * r * r + h * h)}"
+        iyz="0.0"
+        izz="${(m / 2.0) * r * r}"/>
+    </inertial>
+  </xacro:macro>
+
+  <!-- 万向轮使用球体惯性，r为半径 -->
+  <xacro:macro name="sphere_inertia" params="m r">
+    <inertial>
+      <mass value="${m}"/>
+      <inertia
+        ixx="${(2.0 / 5.0) * m * r * r}"
+        ixy="0.0"
+        ixz="0.0"
+        iyy="${(2.0 / 5.0) * m * r * r}"
+        iyz="0.0"
+        izz="${(2.0 / 5.0) * m * r * r}"/>
+    </inertial>
+  </xacro:macro>
+</robot>

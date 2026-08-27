@@ -1,0 +1,5 @@
+# Isaac Sim 5.1 / Isaac Lab 2.3.2 Windows + Ubuntu 22.04 关键兼容约束。
+numpy==1.26.0
+h5py==3.16.0
+tensordict==0.13.0
+rsl-rl-lib==3.1.2

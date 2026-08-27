@@ -1,0 +1,45 @@
+schema_version: 2
+task: Car-LocalNavigation-v0
+policy:
+  kwargs:
+    actor_hidden_dims: [256, 256, 128]
+    critic_hidden_dims: [256, 256, 128]
+    activation: elu
+    init_noise_std: 0.08
+    noise_std_type: bounded_logit
+    min_noise_std: 0.04
+    max_noise_std: 0.10
+algorithm:
+  kwargs:
+    learning_rate: 0.0001
+    min_learning_rate: 0.00001
+    lr_decay_half_life: 50.0
+    symmetry_contract: car_mirror_v1
+    schedule: fixed
+    gamma: 0.995
+    lam: 0.95
+    clip_param: 0.1
+    entropy_coef: 0.0002
+    value_loss_coef: 1.0
+    use_clipped_value_loss: true
+    desired_kl: null
+    max_grad_norm: 1.0
+    num_learning_epochs: 3
+    num_mini_batches: 4
+runner:
+  num_steps_per_env: 32
+  save_interval: 50
+curriculum: configs/curriculum.yaml
+seed: 42
+seeds: [42] # [42, 43, 44]
+num_envs: 256
+max_iterations: 8000
+extension_iterations: 2000
+max_total_iterations: 16000
+auto_extend: true
+checkpoint: null
+# 固定读取项目根目录 calibration/ 中的 YAML 和 CSV。
+calibration: calibration
+run_name: null
+device: cuda:0
+headless: true

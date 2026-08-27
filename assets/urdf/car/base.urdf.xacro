@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:include filename="$(find car_description)/urdf/car/inertia.urdf.xacro"/>
+
+  <!-- base_xacro定义底盘主体和base_footprint->base_link静态TF -->
+  <xacro:macro name="base_xacro" params="length radius base_mass">
+    <!-- base_footprint放在地面投影处，Nav2代价地图通常使用该坐标系 -->
+    <link name="base_footprint"/>
+
+    <link name="base_link">
+      <!-- visual只影响RViz显示，collision用于仿真/规划工具读取车体外形 -->
+      <visual>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${radius}" length="${length}"/>
+        </geometry>
+        <material name="car_body_black">
+          <color rgba="0.2 0.2 0.2 0.85"/>
+        </material>
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <geometry>
+          <cylinder radius="${radius}" length="${length}"/>
+        </geometry>
+      </collision>
+      <xacro:cylinder_inertia m="${base_mass}" r="${radius}" h="${length}"/>
+    </link>
+
+    <joint name="base_footprint_to_base_link" type="fixed">
+      <parent link="base_footprint"/>
+      <child link="base_link"/>
+      <!-- 高度设置让轮子紧贴地面 -->
+      <origin xyz="0 0 ${length/2.0+0.032-0.001}" rpy="0 0 0"/>
+    </joint>
+  </xacro:macro>
+</robot>

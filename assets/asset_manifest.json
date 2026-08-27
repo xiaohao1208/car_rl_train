@@ -1,0 +1,35 @@
+{
+  "asset_config_sha256": "06b8a5807211810e640e4ff2137a49d55ace42c199e5e5a9bf8f3cbecd38a301",
+  "converter": {
+    "name": "Isaac Lab UrdfConverter",
+    "settings": {
+      "damping": 0.0,
+      "drive_type": "force",
+      "fix_base": false,
+      "force_usd_conversion": true,
+      "merge_fixed_joints": false,
+      "self_collision": false,
+      "stiffness": 20.0
+    }
+  },
+  "schema_version": 2,
+  "source_fingerprint_sha256": "ae16bdf1909b4e726a24030df1aa448d55e4db35d30711d540d887b34053a413",
+  "sources": {
+    "car.urdf.xacro": "4dbc56255cb67597c5a021dcea1cfa7447c46fec4c904efae69daa6d8e73f410",
+    "car/actuator/caster.urdf.xacro": "00c08377c06029b864ad8fcda4b15cf15208bf0b536f4299cec95a6b0d947f59",
+    "car/actuator/wheel.urdf.xacro": "ef4d8db8476d86a4acbc63a6f58002d087963342a9add853977adea8ab583ac4",
+    "car/base.urdf.xacro": "742c82602fe94af4b5773bcfaf7032982590a7c438c1795f97b033567153ec95",
+    "car/inertia.urdf.xacro": "c8a25e4d07ff00f676d9c39bbe1b3eec1c097dfba6df93e23eddc9c44b743bb6",
+    "car/sensor/imu.urdf.xacro": "7fa0df84af43f3a9d284e7429f202f86aaa3ce10a878da7ce94516163a108dab",
+    "car/sensor/laser.urdf.xacro": "ab22ce06cb749241980bdbe5fe4db49b2d45d5da167b050c46eb1809639f5a16",
+    "car/sensor/ultrasonic.urdf.xacro": "97ccb58395d787b3b76e0073fbc3733bc73a1dbb902ae557976305cd809676cc"
+  },
+  "urdf": {
+    "path": "assets/urdf/car.urdf",
+    "sha256": "6c13dee85f6d76039f05ffe52be610fd85cd2abf601d6dc52ad889469766f63d"
+  },
+  "usd": {
+    "path": "assets/usd/car.usd",
+    "sha256": "b762ed6be815413326fd32ccd82e9679acf1460f7b29741a1e0cd9b8a23bfff0"
+  }
+}

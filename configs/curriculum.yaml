@@ -1,0 +1,113 @@
+schema_version: 6
+initial_stage: 0
+evaluation_episodes: 500
+consecutive_passes: 1
+replay_previous_probability: 0.25
+
+geometry:
+  footprint_half_length_m: 0.11
+  footprint_half_width_m: 0.118
+  path_safety_margin_m: 0.20
+  map_resolution_m: 0.05
+  # ceil((sqrt(0.11^2 + 0.118^2) + 0.20) / 0.05) * 0.05
+  planning_clearance_m: 0.40
+
+# 路径长度是最终平滑路径弧长。无障碍阶段用 max_curve_offset_m 生成
+# 二次 Bezier 曲线，避免只在直线上训练后突然要求绕障。
+stages:
+  - stage: 0
+    success_rate: 0.90
+    max_collision_rate: 0.03
+    min_stage_episodes: 2000
+    path_length_m: [0.5, 1.0]
+    static_obstacles: [0, 0]
+    dynamic_obstacles: [0, 0]
+    max_curve_offset_m: 0.15
+    goal_yaw_offset_deg: 0
+    randomization_scale: 0.0
+  - stage: 1
+    success_rate: 0.88
+    max_collision_rate: 0.03
+    min_stage_episodes: 2500
+    path_length_m: [0.6, 1.1]
+    static_obstacles: [0, 0]
+    dynamic_obstacles: [0, 0]
+    max_curve_offset_m: 0.20
+    goal_yaw_offset_deg: 5
+    randomization_scale: 0.02
+  - stage: 2
+    success_rate: 0.86
+    max_collision_rate: 0.04
+    min_stage_episodes: 3000
+    path_length_m: [0.75, 1.25]
+    static_obstacles: [0, 0]
+    dynamic_obstacles: [0, 0]
+    max_curve_offset_m: 0.27
+    goal_yaw_offset_deg: 15
+    randomization_scale: 0.05
+  - stage: 3
+    success_rate: 0.84
+    max_collision_rate: 0.05
+    min_stage_episodes: 3500
+    path_length_m: [0.75, 1.5]
+    static_obstacles: [0, 0]
+    dynamic_obstacles: [0, 0]
+    max_curve_offset_m: 0.35
+    goal_yaw_offset_deg: 30
+    randomization_scale: 0.10
+  - stage: 4
+    success_rate: 0.80
+    max_collision_rate: 0.08
+    min_stage_episodes: 4500
+    path_length_m: [1.0, 2.0]
+    static_obstacles: [0, 3]
+    dynamic_obstacles: [0, 0]
+    max_curve_offset_m: 0.35
+    goal_yaw_offset_deg: 45
+    randomization_scale: 0.25
+  - stage: 5
+    success_rate: 0.74
+    max_collision_rate: 0.12
+    min_stage_episodes: 6000
+    path_length_m: [1.0, 2.5]
+    static_obstacles: [2, 8]
+    dynamic_obstacles: [0, 1]
+    max_curve_offset_m: 0.35
+    goal_yaw_offset_deg: 90
+    randomization_scale: 0.50
+  - stage: 6
+    success_rate: 0.70
+    max_collision_rate: 0.12
+    min_stage_episodes: 8000
+    path_length_m: [1.0, 3.5]
+    static_obstacles: [4, 14]
+    dynamic_obstacles: [0, 2]
+    max_curve_offset_m: 0.35
+    goal_yaw_offset_deg: 150
+    randomization_scale: 0.80
+  - stage: 7
+    # 训练窗口含 bounded-logit 动作噪声，只用于筛除明显失稳的 checkpoint；
+    # 确定性部署质量仍由 core/dynamic 正式门禁判定。
+    success_rate: 0.70
+    max_collision_rate: 0.10
+    min_stage_episodes: 15000
+    path_length_m: [1.0, 4.0]
+    static_obstacles: [6, 18]
+    dynamic_obstacles: [0, 2]
+    max_curve_offset_m: 0.35
+    goal_yaw_offset_deg: 180
+    randomization_scale: 1.0
+
+randomization:
+  lidar:
+    gaussian_std_m: 0.02
+    bias_max_m: 0.01
+    invalid_ray_probability: 0.03
+    whole_frame_drop_probability: 0.02
+    range_scale_max_error: 0.01
+  localization:
+    position_std_m: 0.03
+    yaw_std_rad: 0.035
+    # 部署端定位健康检查后的慢漂移上限：约 3 cm、0.03 rad/分钟。
+    slow_position_drift_mps: 0.0005
+    slow_yaw_drift_radps: 0.0005
